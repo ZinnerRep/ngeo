@@ -94,11 +94,12 @@ exports.Controller_ = class {
    * @param {ngeo.map.FeatureOverlayMgr} ngeoFeatureOverlayMgr ngeo feature overlay manager service.
    * @param {ngeo.offline.ServiceManager} ngeoOfflineServiceManager ngeo offline service Manager.
    * @param {ngeox.OfflineConfiguration} ngeoOfflineConfiguration ngeo offline configuration service.
+   * @param {ngeo.offline.State} ngeoOfflineState Offline state manager.
    * @ngInject
    * @ngdoc controller
    * @ngname ngeoOfflineController
    */
-  constructor($timeout, ngeoFeatureOverlayMgr, ngeoOfflineServiceManager, ngeoOfflineConfiguration) {
+  constructor($timeout, ngeoFeatureOverlayMgr, ngeoOfflineServiceManager, ngeoOfflineConfiguration, ngeoOfflineState) {
 
     /**
      * @export
@@ -129,6 +130,12 @@ exports.Controller_ = class {
      * @type {ngeox.OfflineConfiguration}
      */
     this.ngeoOfflineConfiguration_ = ngeoOfflineConfiguration;
+
+    /**
+     * @type {ngeo.offline.State}
+     * @export
+     */
+    this.offlineState = ngeoOfflineState;
 
     /**
      * The map.
@@ -360,17 +367,28 @@ exports.Controller_ = class {
   }
 
   /**
-   * Zoom to the extent of that data.
+   * Activate offline mode.
+   * Zoom to the extent of that data and restore the data.
    * @export
    */
-  zoomToExtent() {
+  activateOfflineMode() {
     this.ngeoOfflineServiceManager_.restore(this.map).then((extent) => {
       this.dataPolygon_ = this.createPolygonFromExtent_(extent);
       const size = /** @type {ol.Size} */ (this.map.getSize());
       this.map.getView().fit(this.dataPolygon_, {size});
       this.menuDisplayed = false;
       this.displayExtent_();
+      this.offlineState.loadOfflineData();
     });
+  }
+  /**
+   *
+   * Deactivate offline mode.
+   * Reload the page.
+   * @export
+   */
+  deactivateOfflineMode() {
+    window.location.reload();
   }
 
   /**
