@@ -94,12 +94,12 @@ exports.Controller_ = class {
    * @param {ngeo.map.FeatureOverlayMgr} ngeoFeatureOverlayMgr ngeo feature overlay manager service.
    * @param {ngeo.offline.ServiceManager} ngeoOfflineServiceManager ngeo offline service Manager.
    * @param {ngeox.OfflineConfiguration} ngeoOfflineConfiguration ngeo offline configuration service.
-   * @param {ngeo.offline.State} ngeoOfflineState Offline state manager.
+   * @param {ngeo.offline.Mode} ngeoOfflineMode Offline mode manager.
    * @ngInject
    * @ngdoc controller
    * @ngname ngeoOfflineController
    */
-  constructor($timeout, ngeoFeatureOverlayMgr, ngeoOfflineServiceManager, ngeoOfflineConfiguration, ngeoOfflineState) {
+  constructor($timeout, ngeoFeatureOverlayMgr, ngeoOfflineServiceManager, ngeoOfflineConfiguration, ngeoOfflineMode) {
 
     /**
      * @export
@@ -132,10 +132,10 @@ exports.Controller_ = class {
     this.ngeoOfflineConfiguration_ = ngeoOfflineConfiguration;
 
     /**
-     * @type {ngeo.offline.State}
+     * @type {ngeo.offline.Mode}
      * @export
      */
-    this.offlineState = ngeoOfflineState;
+    this.offlineMode = ngeoOfflineMode;
 
     /**
      * The map.
@@ -378,7 +378,7 @@ exports.Controller_ = class {
       this.map.getView().fit(this.dataPolygon_, {size});
       this.menuDisplayed = false;
       this.displayExtent_();
-      this.offlineState.loadOfflineData();
+      this.offlineMode.enable();
     });
   }
   /**
